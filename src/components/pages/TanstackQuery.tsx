@@ -1,20 +1,18 @@
 import {useQuery,useMutation,useQueryClient} from "@tanstack/react-query";
 import {useEffect,useState} from "react";
-import Crud_Operations from "../crud_logic/crud_logic.js";
-import Button from ".././ui/Button.tsx";
+import Crud_Operations from "../../crud_logic/crud_logic.js";
+import Button from "../../ui/Button.tsx";
 const TanstackQuery=()=>{
   let [page,setPage]=useState(1);
   let [data,setData]=useState([]);
   let queryClient=useQueryClient();
   const operations=new Crud_Operations();
-  const getData=operations.getData;
-  const deleteData=operations.deleteData;
-  const updateData=operations.updateData;
+  const {getData,deleteData,updateData}=operations;
   const fetchNextPageData= ()=>{
     setPage(prev=>prev+1);
   }
   //data fetching
-  let {isPending,error,data:responseData,isFetching}=useQuery({
+  let {isLoading,iserror,error,isSuccess,data:responseData,isFetching}=useQuery({
     queryKey:["test_data",page],
     queryFn:()=>getData(page),
     keepPreviousData:true,
@@ -52,11 +50,11 @@ const TanstackQuery=()=>{
   return(
     <>
     <div className="text-red-950 uppercase text-center py-5">Data fetching with tanstack query</div>
-    {isPending && <p className="text-center">loading...</p>}
+    {isLoading && <p className="text-center">loading...</p>}
     {error && <p className="text-center">something went wrong</p>}
     {/*display data*/}
     {
-      !error && data?.length>0 &&
+      !error && data?.length && isSuccess>0 &&
      <div className="flex flex-col gap-5 mx-5">
     {
     data?.map((item,index)=>(

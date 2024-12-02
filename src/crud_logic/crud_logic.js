@@ -22,5 +22,11 @@ class Crud_Operations{
     const {data}=await axios.patch(`${this.BASE_URL}/${id}`,{body:"this is test message"});
     return data;
   }
+  getInfiniteData=async({pageParam=1})=>{
+    console.log({pageParam})
+    let url=`${this.BASE_URL}?_page=${pageParam}&_limit=5`;
+    const {data}=await axios.get(url);
+    return data;
+  }
 }
 export default Crud_Operations;

@@ -5,6 +5,7 @@ const Header=()=>{
     <ul className="flex items-center justify-center gap-5 list-none">
     <Link to="/"><li>Home</li></Link>
     <Link to="/tanstack"><li>Tanstack</li></Link>
+     <Link to="/infiniteScroll"><li>Infinite_Scroll</li></Link>
     </ul>
     </nav>
     )

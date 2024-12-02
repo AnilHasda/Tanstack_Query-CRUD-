@@ -1,5 +1,5 @@
 import {useEffect,useState} from "react";
-import useGetData from "./custom_hooks/useGetData.tsx";
+import useGetData from ".././custom_hooks/useGetData.tsx";
 export default function Home(){
   let [pageNumber,setPageNumber]=useState(1);
   let {fetchData,data}=useGetData();
