@@ -3,6 +3,7 @@ import  Crud_Operations from "../../crud_logic/crud_logic.js";
 import Button from "../../ui/Button.tsx";
 import {useEffect} from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useInView } from "react-intersection-observer";
 const Infinite_Scroll=()=>{
   let operations=new Crud_Operations();
   let {getInfiniteData}=operations;
@@ -13,9 +14,11 @@ const Infinite_Scroll=()=>{
       console.log({lastPageData,allPages})
       return lastPageData.length===5?allPages.length+1:undefined;
     }
-  })
+  });
+  
+  /*without external package to achieve infinite scrolling entrance*/
   //handleScroll
-  const handleScroll=()=>{
+/*  const handleScroll=()=>{
     let isBottom=window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-10;
     if(isBottom && hasNextPage) fetchNextPage();
   }
@@ -25,9 +28,16 @@ const Infinite_Scroll=()=>{
   useEffect(()=>{
     window.addEventListener("scroll",handleScroll);
     return ()=> window.removeEventListener("scroll",handleScroll);
-  })
+  })*/
+    /*without external package to achieve infinite scrolling end*/
+    const { ref, inView, entry } = useInView({
+    threshold: 0,
+  });
+  useEffect(()=>{
+    if(inView && hasNextPage) fetchNextPage();
+  },[inView,hasNextPage])
   if(isLoading){
-    return <div><ClipLoader size={20}/></div>
+    return <div className="height-[100vh] width-[100vw] grid place-content-center"><ClipLoader size={20}/></div>
   }
   return(
   <>
@@ -49,7 +59,7 @@ const Infinite_Scroll=()=>{
       })
     }
     </div>
-    <p className="text-center py-2">loading more...</p>
+    <p ref={ref} className="text-center py-2">loading more...</p>
   </>
   )
 }

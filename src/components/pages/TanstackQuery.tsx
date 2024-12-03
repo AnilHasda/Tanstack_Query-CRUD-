@@ -12,7 +12,7 @@ const TanstackQuery=()=>{
     setPage(prev=>prev+1);
   }
   //data fetching
-  let {isLoading,iserror,error,isSuccess,data:responseData,isFetching}=useQuery({
+  let {isPending,isError,error,isSuccess,data:responseData,isFetching}=useQuery({
     queryKey:["test_data",page],
     queryFn:()=>getData(page),
     keepPreviousData:true,
@@ -40,21 +40,20 @@ const TanstackQuery=()=>{
     }
   });
   useEffect(()=>{
-    if(responseData) console.log("data:",responseData);
+    if(responseData){
+      console.log("data:",responseData);
+      setData(prev=>([...prev,...responseData]))
+    }
     if(error) console.log("error:",error);
   },[responseData,error]);
-  useEffect(()=>{
-    if(responseData && page===1) setData(responseData)
-    if(responseData && page>1) setData(prev=>([...prev,...responseData]));
-  },[responseData])
   return(
     <>
     <div className="text-red-950 uppercase text-center py-5">Data fetching with tanstack query</div>
-    {isLoading && <p className="text-center">loading...</p>}
+    {isPending && page===1 && <p className="text-center">loading...</p>}
     {error && <p className="text-center">something went wrong</p>}
     {/*display data*/}
     {
-      !error && data?.length && isSuccess>0 &&
+      !error && data?.length && isSuccess &&
      <div className="flex flex-col gap-5 mx-5">
     {
     data?.map((item,index)=>(
